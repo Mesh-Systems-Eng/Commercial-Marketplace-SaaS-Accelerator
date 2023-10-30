@@ -62,6 +62,6 @@ jobs:
       - name: Build Bicep
         id: build-bicep
         run: |
-          $mainFile = "${{ inputs.workingDirectory }}/${{ inputs.mainBicepFile }}"
+          $mainFile = "${{ github.event.inputs.workingDirectory }}/${{ github.event.inputs.mainBicepFile }}"
           Write-Host "Building Bicep file: $mainFile"
-          az bicep build -f "${{ inputs.workingDirectory }}/${{ inputs.mainBicepFile }}"
+          az bicep build -f $mainFile
