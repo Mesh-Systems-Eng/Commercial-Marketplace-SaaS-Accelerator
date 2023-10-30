@@ -49,19 +49,19 @@ jobs:
               Write-Host "Processing -> $file.Name"
               Invoke-Expression $azCommand
           }
-
-  build-bicep:
-    name: Build Bicep
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: pwsh
-
-    steps:
-      - uses: actions/checkout@main
       - name: Build Bicep
         id: build-bicep
         run: |
           $mainFile = "${{ github.event.inputs.workingDirectory }}/${{ github.event.inputs.mainBicepFile }}"
           Write-Host "Building Bicep file: $mainFile"
           az bicep build -f $mainFile
+
+  # build-bicep:
+  #   name: Build Bicep
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       shell: pwsh
+
+  #   steps:
+  #     - uses: actions/checkout@main
