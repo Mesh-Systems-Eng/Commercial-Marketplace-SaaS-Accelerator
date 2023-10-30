@@ -61,4 +61,7 @@ jobs:
       - uses: actions/checkout@main
       - name: Build Bicep
         id: build-bicep
-        run: az bicep build -f "${{ inputs.workingDirectory }}/${{ inputs.mainBicepFile }}"
+        run: |
+          $mainFile = "${{ inputs.workingDirectory }}/${{ inputs.mainBicepFile }}"
+          Write-Host "Building Bicep file: $mainFile"
+          az bicep build -f "${{ inputs.workingDirectory }}/${{ inputs.mainBicepFile }}"
