@@ -1,0 +1,64 @@
+# This workflow will run build and unit test on every PR raised.
+
+name: "Format and Build IaC"
+
+on:
+  workflow_dispatch:
+    inputs:
+      workingDirectory:
+        description: "The directory where the Bicep files are located"
+        required: true
+        default: "./env"
+      mainBicepFile:
+        description: "The main Bicep file to build"
+        required: true
+        default: "main.bicep"
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  format-bicep:
+    name: Format Bicep
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@main
+      - name: Format Bicep
+        id: format-bicep
+        run: |
+          # Set the path to the root directory where you want to search for .bicep files
+          $rootDirectory = "${{ inputs.workingDirectory }}"
+
+          # Get a list of all .bicep files in the specified directory and its subdirectories
+          $files = Get-ChildItem -Path $rootDirectory -Filter "*.bicep" -File -Recurse
+
+          # Loop through the list of .bicep files and execute an Azure CLI command on each file
+          foreach ($file in $files) {
+              $bicepFilePath = $file.FullName
+              $azCommand = "az bicep format -f $file"
+              
+              # Run the Azure CLI command
+              Write-Host "Processing -> $file.Name"
+              Invoke-Expression $azCommand
+          }
+
+  build-bicep:
+    name: Build Bicep
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - uses: actions/checkout@main
+      - name: Build Bicep
+        id: build-bicep
+        run: az bicep build -f "${{ inputs.workingDirectory }}/${{ inputs.mainBicepFile }}"
