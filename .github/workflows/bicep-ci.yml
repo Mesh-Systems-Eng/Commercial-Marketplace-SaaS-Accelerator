@@ -3,6 +3,14 @@
 name: "Format and Build IaC"
 
 on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
   workflow_dispatch:
     inputs:
       workingDirectory:
@@ -15,18 +23,10 @@ on:
         type: string
         required: true
         default: ./env/main.bicep
-  push:
-    branches:
-      - develop
-      - main
-  pull_request:
-    branches:
-      - develop
-      - main
 
 jobs:
   format-bicep:
-    name: Format Bicep
+    name: Validate Bicep
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
