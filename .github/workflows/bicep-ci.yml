@@ -37,24 +37,24 @@ jobs:
         shell: pwsh
     steps:
       - uses: actions/checkout@main
-      # - name: Format Bicep
-      #   id: format-bicep
-      #   run: |
-      #     # Set the path to the root directory where you want to search for .bicep files
-      #     $rootDirectory = "${{ env.WORKING_DIRECTORY }}"
+      - name: Format Bicep
+        id: format-bicep
+        run: |
+          # Set the path to the root directory where you want to search for .bicep files
+          $rootDirectory = "${{ env.WORKING_DIRECTORY }}"
 
-      #     # Get a list of all .bicep files in the specified directory and its subdirectories
-      #     $files = Get-ChildItem -Path $rootDirectory -Filter "*.bicep" -File -Recurse
+          # Get a list of all .bicep files in the specified directory and its subdirectories
+          $files = Get-ChildItem -Path $rootDirectory -Filter "*.bicep" -File -Recurse
 
-      #     # Loop through the list of .bicep files and execute an Azure CLI command on each file
-      #     foreach ($file in $files) {
-      #         $bicepFilePath = $file.FullName
-      #         $azCommand = "az bicep format -f $file"
+          # Loop through the list of .bicep files and execute an Azure CLI command on each file
+          foreach ($file in $files) {
+              $bicepFilePath = $file.FullName
+              $azCommand = "az bicep format -f $file"
 
-      #         # Run the Azure CLI command
-      #         Write-Host "Processing -> $file.Name"
-      #         Invoke-Expression $azCommand
-      #    }
+              # Run the Azure CLI command
+              Write-Host "Processing -> $file.Name"
+              Invoke-Expression $azCommand
+          } 
       - name: Build Bicep
         id: build-bicep
         shell: bash
