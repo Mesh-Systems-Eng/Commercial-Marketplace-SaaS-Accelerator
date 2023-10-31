@@ -28,6 +28,9 @@ jobs:
   format-bicep:
     name: Validate Bicep
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
     steps:
       - uses: actions/checkout@main
       # - name: Format Bicep
@@ -49,7 +52,7 @@ jobs:
       #         Invoke-Expression $azCommand
       #    }
       - name: print input
-        run: echo "The mainBipecFile is ${{ inputs.workingDirectory }}"
+        run: Write-host "The value is ${{ inputs.workingDirectory }}"
       - name: Build Bicep
         id: build-bicep
         run: |
