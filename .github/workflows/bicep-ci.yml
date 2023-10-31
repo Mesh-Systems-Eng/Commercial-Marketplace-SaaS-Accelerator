@@ -48,6 +48,8 @@ jobs:
       #         Write-Host "Processing -> $file.Name"
       #         Invoke-Expression $azCommand
       #    }
+      - name: print input
+        run: echo "The mainBipecFile is ${{inputs.mainBicepFile}}"
       - name: Build Bicep
         id: build-bicep
         run: |
