@@ -49,7 +49,7 @@ jobs:
       #         Invoke-Expression $azCommand
       #    }
       - name: print input
-        run: echo "The mainBipecFile is ${{inputs.mainBicepFile}}"
+        run: echo "The mainBipecFile is ${{ inputs.workingDirectory }}"
       - name: Build Bicep
         id: build-bicep
         run: |
