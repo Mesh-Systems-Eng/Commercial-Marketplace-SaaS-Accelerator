@@ -51,6 +51,6 @@ jobs:
       - name: Build Bicep
         id: build-bicep
         run: |
-          mainFile=${{ github.event.inputs.mainBicepFile }}
+          mainFile=${{inputs.mainBicepFile}}
           echo "Building Bicep file: $mainFile"
           az bicep build -f $mainFile
