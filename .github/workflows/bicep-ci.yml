@@ -1,7 +1,7 @@
 # This workflow will run build and unit test on every PR raised.
 
 name: "Format and Build IaC"
-
+  
 on:
   push:
     branches:
@@ -24,6 +24,10 @@ on:
         required: true
         default: ./env/main.bicep
 
+env:
+  MAIN_BICEP_FILE: ${{ inputs.mainBicepFile || './env/main.bicep'}}
+  WORKING_DIRECTORY: ${{ inputs.workingDirectory || './env'}}
+
 jobs:
   format-bicep:
     name: Validate Bicep
@@ -37,7 +41,7 @@ jobs:
       #   id: format-bicep
       #   run: |
       #     # Set the path to the root directory where you want to search for .bicep files
-      #     $rootDirectory = "${{ inputs.workingDirectory }}"
+      #     $rootDirectory = "${{ env.WORKING_DIRECTORY }}"
 
       #     # Get a list of all .bicep files in the specified directory and its subdirectories
       #     $files = Get-ChildItem -Path $rootDirectory -Filter "*.bicep" -File -Recurse
@@ -51,11 +55,9 @@ jobs:
       #         Write-Host "Processing -> $file.Name"
       #         Invoke-Expression $azCommand
       #    }
-      - name: print input
-        run: Write-host "The value is ${{ inputs.workingDirectory }}"
       - name: Build Bicep
         id: build-bicep
         run: |
-          mainFile=${{inputs.mainBicepFile}}
+          mainFile=${{env.MAIN_BICEP_FILE}}
           echo "Building Bicep file: $mainFile"
           az bicep build -f $mainFile
