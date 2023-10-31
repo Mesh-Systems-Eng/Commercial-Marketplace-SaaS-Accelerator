@@ -7,12 +7,14 @@ on:
     inputs:
       workingDirectory:
         description: "The directory where the Bicep files are located"
+        type: string
         required: true
         default: "./env"
       mainBicepFile:
         description: "The main Bicep file to build"
+        type: string
         required: true
-        default: "main.bicep"
+        default: "./env/main.bicep"
   push:
     branches:
       - develop
@@ -52,16 +54,6 @@ jobs:
       - name: Build Bicep
         id: build-bicep
         run: |
-          $mainFile = "${{ inputs.workingDirectory }}/${{ inputs.mainBicepFile }}"
+          $mainFile = "${{ inputs.mainBicepFile }}"
           Write-Host "Building Bicep file: $mainFile"
-          az bicep build -f ./env/main.bicep
-
-  # build-bicep:
-  #   name: Build Bicep
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       shell: pwsh
-
-  #   steps:
-  #     - uses: actions/checkout@main
+          az bicep build -f $mainFile
