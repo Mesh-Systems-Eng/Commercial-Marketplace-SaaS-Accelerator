@@ -1,7 +1,7 @@
 # This workflow will run build and unit test on every PR raised.
 
 name: "Format and Build IaC"
-  
+
 on:
   push:
     branches:
@@ -48,17 +48,16 @@ jobs:
 
           # Loop through the list of .bicep files and execute an Azure CLI command on each file
           foreach ($file in $files) {
-              $bicepFilePath = $file.FullName
-              $azCommand = "az bicep format -f $file"
+            $bicepFilePath = $file.FullName
+            $azCommand = "az bicep format -f $file"
 
-              # Run the Azure CLI command
-              Write-Host "Processing -> $file.Name"
-              Invoke-Expression $azCommand
-          } 
+            # Run the Azure CLI command
+            Write-Host "Processing -> $file.Name"
+            Invoke-Expression $azCommand
+          }
       - name: Build Bicep
         id: build-bicep
-        shell: bash
         run: |
-          mainFile=${{env.MAIN_BICEP_FILE}}
+          $mainFile=${{env.MAIN_BICEP_FILE}}
           echo "Building Bicep file: $mainFile"
           az bicep build -f $mainFile
