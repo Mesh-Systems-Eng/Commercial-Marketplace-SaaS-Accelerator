@@ -57,7 +57,8 @@ jobs:
       #    }
       - name: Build Bicep
         id: build-bicep
+        shell: bash
         run: |
-          mainFile='${{env.MAIN_BICEP_FILE}}'
+          mainFile=${{env.MAIN_BICEP_FILE}}
           echo "Building Bicep file: $mainFile"
           az bicep build -f $mainFile
