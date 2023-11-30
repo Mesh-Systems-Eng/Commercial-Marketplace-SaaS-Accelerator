@@ -14,6 +14,10 @@ param projectAffix string
 param qualifyProjectAffix bool = false
 @description('Flag to determine whether or not we need to deploy keyvault, note deploying keyvault will delete access policies defined in other templates')
 param doesKeyVaultExist bool = false
+param sqlAdminLogin string
+@secure()
+param sqlAdminLoginPassword string
+
 
 param location string = resourceGroup().location
 
@@ -22,20 +26,62 @@ var envIndexVar = ((envIndex > 0) ? envIndex : '')
 var projectAffixTitleCase = '${toUpper(first(projectAffix))}${toLower(substring(projectAffix, 1, (length(projectAffix) - 1)))}'
 var namingPrefix = '${env}${(qualifyProjectAffix ? '${clientAffixTitleCase}${toLower(projectAffixTitleCase)}' : clientAffixTitleCase)}${envIndexVar}'
 var resourceNames = {
-  storage: toLower('${namingPrefix}Sa')
   keyvault: '${namingPrefix}kv'
   sql: {
     server: toLower('${namingPrefix}Sql')
-    database: toLower('${namingPrefix}Sdb')
-    aidatabase: toLower('${env}RebelAi')
+    database: 'AMPSaaSDB'
   }
-  appInsights: '${namingPrefix}ai'
-  logAnalytics: '${namingPrefix}la'
-  resourcegroup: 'rg-${clientAffix}-${env}'
   appService: {
     plan: '${namingPrefix}Asp'
     portal: '${namingPrefix}Portal'
     admin: '${namingPrefix}Admin'
   }
-  backendAppService: '${namingPrefix}BackendAs'
+}
+
+module config 'config/config.bicep' = {
+  name: '${componentAffix}Configuration'
+  params: {
+    environment: toLower(env)
+  }
+}
+
+// sql server and database + kv secret with connection string (secret 1/2)
+module sql 'modules/sql.bicep' = {
+  name: '${componentAffix}Sql'
+  params: {
+    sqlServerName: resourceNames.sql.server
+    sqlDatabaseName: resourceNames.sql.database
+    sqlAdminLogin: sqlAdminLogin
+    sqlAdminLoginPassword: sqlAdminLoginPassword
+    location: location
+    sqlSkuName: config.outputs.settings.sql.sku.name
+    sqlSkuTier: config.outputs.settings.sql.sku.family
+    sqlSkuCapacity: config.outputs.settings.sql.sku.capacity
+    kvName: keyvault.outputs.kvName
+  }
+}
+
+// app service plan + app service + kv secret ADApplicationSecret (secret 2/2)
+module appService 'modules/apps.bicep' = {
+  name: '${componentAffix}AppService'
+  params: {
+    aspSku: config.outputs.settings.appServicePlan.sku
+    aspProperties: config.outputs.settings.appServicePlan.properties
+    location: location
+    resourceNames: resourceNames
+  }
+}
+
+// keyvault
+module keyvault 'modules/key-vault.bicep' = {
+  name: '${componentAffix}KeyVault'
+  params: {
+    name: resourceNames.keyvault
+    location: location
+    doDeploySharedKeyVault: !doesKeyVaultExist
+    tags: config.outputs.settings.tags
+    skuFamily: config.outputs.settings.keyVault.sku.family
+    skuName: config.outputs.settings.keyVault.sku.name
+    accessPolicies: config.outputs.settings.keyVault.accessPolicies
+  }
 }

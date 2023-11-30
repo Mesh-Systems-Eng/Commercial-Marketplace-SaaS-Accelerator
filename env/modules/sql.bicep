@@ -1,11 +1,20 @@
 param sqlServerName string
+param sqlDatabaseName string
+param sqlAdminLogin string
+@secure()
+param sqlAdminLoginPassword string
 param location string
+param sqlSkuName string
+param sqlSkuTier string
+param sqlSkuCapacity int
+param kvName string
 
-resource sqlServer 'Microsoft.Sql/servers@2023-02-01-preview' = {
+resource sqlServer 'Microsoft.Sql/servers@2023-05-01-preview' = {
   name: sqlServerName
   location: location
   properties: {
-    administratorLogin: 'saasdbadmin502'
+    administratorLogin: sqlAdminLogin
+    administratorLoginPassword: sqlAdminLoginPassword
     version: '12.0'
     minimalTlsVersion: 'None'
     publicNetworkAccess: 'Enabled'
@@ -14,6 +23,10 @@ resource sqlServer 'Microsoft.Sql/servers@2023-02-01-preview' = {
 
   resource allowAzureIp 'firewallRules' = {
     name: 'AllowAzureIP'
+    properties: {
+      startIpAddress: '0.0.0.0'
+      endIpAddress: '0.0.0.0'
+    }
   }
   resource allowIp 'firewallRules' = {
     name: 'AllowIP'
@@ -26,22 +39,24 @@ resource sqlServer 'Microsoft.Sql/servers@2023-02-01-preview' = {
   }
 
   resource ampSaasDb 'databases' = {
-    name: 'AMPSaaSDB'
+    name: sqlDatabaseName
     location: location
     sku: {
-      name: 'Basic'
-      tier: 'Basic'
-      capacity: 5
+      name: sqlSkuName
+      tier: sqlSkuTier
+      capacity: sqlSkuCapacity
     }
     properties: {
-      collation: 'SQL_Latin1_General_CP1_CI_AS'
-      maxSizeBytes: 2147483648
-      catalogCollation: 'SQL_Latin1_General_CP1_CI_AS'
       zoneRedundant: false
-      readScale: 'Disabled'
-      requestedBackupStorageRedundancy: 'Geo'
-      isLedgerOn: false
-      availabilityZone: 'NoPreference'
     }
+  }
+}
+
+module connectionKvSecret 'kv-secret.bicep' = {
+  name: 'connectionKvSecret'
+  params: {
+    keyVaultName: kvName
+    secretName: 'DefaultConnection'
+    value: 'Data Source=tcp:${sqlServer.name}.database.windows.net,1433;Initial Catalog=${sqlDatabaseName};User Id=${sqlAdminLogin}@${sqlServerName}.database.windows.net;Password=${sqlAdminLoginPassword};'
   }
 }
