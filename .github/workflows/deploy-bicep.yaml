@@ -53,18 +53,12 @@ jobs:
           # Credentials inherited from parent workflow
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # - name: Read YAML variables
-      #   uses: pietrobolcato/action-read-yaml@1.0.0
-      #   id: yaml-data
-      #   with:
-      #     config: ${{ inputs.variablesYamlPath }}
       - name: Set ENV values from YAML
         uses: dcarbone/yaml-to-env-action@v1.0.0
         with:
           debug: true
           yaml-file: '${{ inputs.variablesYamlPath }}'
           yq-version: '4.27.5'
-      - run: echo $env:VARIABLES_CLIENTAFFIX
 
       - run: |
           az account show
@@ -79,10 +73,10 @@ jobs:
             --name azuredeploy-$($env:GITHUB_RUN_ATTEMPT) `
             --template-file ${{ inputs.bicepTemplatePath }} `
             --parameters `
-              clientAffix=${{ steps.yaml-data.outputs['variables.clientAffix'] }} `
+              clientAffix=$env:VARIABLES_CLIENTAFFIX `
               env=${{ inputs.env }} `
-              projectAffix=${{ steps.yaml-data.outputs['variables.projectAffix'] }} `
-              componentAffix=${{ steps.yaml-data.outputs['variables.componentAffix'] }} `
+              projectAffix=$env:VARIABLES_PROJECTAFFIX `
+              componentAffix=$env:VARIABLES_COMPONENTAFFIX `
               sqlAdminLogin=${{ secrets.SQL_ADMIN_LOGIN }} `
               sqlAdminLoginPassword=${{ secrets.SQL_ADMIN_LOGIN_PASSWORD }} `
               doesKeyVaultExist=${{ inputs.doesKeyVaultExist }} `
