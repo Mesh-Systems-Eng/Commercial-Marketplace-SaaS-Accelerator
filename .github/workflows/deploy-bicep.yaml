@@ -57,7 +57,8 @@ jobs:
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: yaml-data
         with:
-          config: ${{ inputs.variablesYamlPath }}
+          config: "$env:GITHUB_WORKSPACE/pipelines/variables.yml"
+          # config: ${{ inputs.variablesYamlPath }}
 
       - run: |
           az account show
