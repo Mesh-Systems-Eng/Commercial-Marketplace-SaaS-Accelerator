@@ -21,19 +21,6 @@ resource sqlServer 'Microsoft.Sql/servers@2023-05-01-preview' = {
     restrictOutboundNetworkAccess: 'Disabled'
   }
 
-  resource allowAzureIp 'firewallRules' = {
-    name: 'AllowAzureIP'
-  }
-  resource allowIp 'firewallRules' = {
-    name: 'AllowIP'
-  }
-  resource serviceManaged 'keys' = {
-    name: 'ServiceManaged'
-    properties: {
-      serverKeyType: 'ServiceManaged'
-    }
-  }
-
   resource ampSaasDb 'databases' = {
     name: sqlDatabaseName
     location: location
@@ -45,6 +32,23 @@ resource sqlServer 'Microsoft.Sql/servers@2023-05-01-preview' = {
     properties: {
       zoneRedundant: false
     }
+  }
+}
+
+resource allowAzureIp 'Microsoft.Sql/servers/firewallRules@2023-05-01-preview' = {
+  name: 'AllowAzureIP'
+  parent: sqlServer
+  properties: {
+    startIpAddress: '0.0.0.0'
+    endIpAddress: '0.0.0.0'
+  }
+}
+resource allowIp 'Microsoft.Sql/servers/firewallRules@2023-05-01-preview' = {
+  name: 'AllowIP'
+  parent: sqlServer
+  properties: {
+    startIpAddress: '0.0.0.0'
+    endIpAddress: '0.0.0.0'
   }
 }
 

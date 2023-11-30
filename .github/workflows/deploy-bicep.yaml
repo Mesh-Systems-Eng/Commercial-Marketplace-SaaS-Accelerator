@@ -19,6 +19,7 @@ on:
       resourceGroup:
         type: string
         required: true
+        default: "rg-accelerator-sd"
       resourceGroupLocation:
         type: string
         default: "eastus"
@@ -77,6 +78,7 @@ jobs:
               env=${{ inputs.env }} `
               projectAffix=$env:VARIABLES_PROJECTAFFIX `
               componentAffix=$env:VARIABLES_COMPONENTAFFIX `
+              qualifyComponentAffix=true `
               sqlAdminLogin=${{ secrets.SQL_ADMIN_LOGIN }} `
               sqlAdminLoginPassword=${{ secrets.SQL_ADMIN_LOGIN_PASSWORD }} `
               doesKeyVaultExist=${{ inputs.doesKeyVaultExist }} `

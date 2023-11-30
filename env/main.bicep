@@ -11,7 +11,7 @@ param envIndex int = 0
 @description('A 3-9 letter project affix')
 param projectAffix string
 @description('Set to true when the project affix is generic ie Remote Monitoring (rmtmon), traXsmart (txs), etc ')
-param qualifyProjectAffix bool = false
+param qualifyComponentAffix bool = false
 @description('Flag to determine whether or not we need to deploy keyvault, note deploying keyvault will delete access policies defined in other templates')
 param doesKeyVaultExist bool = false
 param sqlAdminLogin string
@@ -23,8 +23,8 @@ param location string = resourceGroup().location
 
 var clientAffixTitleCase = '${toUpper(first(clientAffix))}${toLower(substring(clientAffix, 1, (length(clientAffix) - 1)))}'
 var envIndexVar = ((envIndex > 0) ? envIndex : '')
-var projectAffixTitleCase = '${toUpper(first(projectAffix))}${toLower(substring(projectAffix, 1, (length(projectAffix) - 1)))}'
-var namingPrefix = '${env}${(qualifyProjectAffix ? '${clientAffixTitleCase}${toLower(projectAffixTitleCase)}' : clientAffixTitleCase)}${envIndexVar}'
+var componentAffixTitleCase = '${toUpper(first(componentAffix))}${toLower(substring(componentAffix, 1, (length(componentAffix) - 1)))}'
+var namingPrefix = '${env}${(qualifyComponentAffix ? '${clientAffixTitleCase}${toLower(componentAffixTitleCase)}' : clientAffixTitleCase)}${envIndexVar}'
 var resourceNames = {
   keyvault: '${namingPrefix}kv'
   sql: {
