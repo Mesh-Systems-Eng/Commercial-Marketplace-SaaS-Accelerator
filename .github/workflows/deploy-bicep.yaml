@@ -10,9 +10,9 @@ on:
       additionalBicepParameters:
         default: ""
         type: string
-      clientAffix:
-        required: true
-        type: string
+      # clientAffix:
+      #   required: true
+      #   type: string
       env:
         default: Sd
         type: string
