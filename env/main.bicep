@@ -24,7 +24,7 @@ param location string = resourceGroup().location
 var clientAffixTitleCase = '${toUpper(first(clientAffix))}${toLower(substring(clientAffix, 1, (length(clientAffix) - 1)))}'
 var envIndexVar = ((envIndex > 0) ? envIndex : '')
 var componentAffixTitleCase = '${toUpper(first(componentAffix))}${toLower(substring(componentAffix, 1, (length(componentAffix) - 1)))}'
-var namingPrefix = '${env}${(qualifyComponentAffix ? '${clientAffixTitleCase}${toLower(componentAffixTitleCase)}' : clientAffixTitleCase)}${envIndexVar}'
+var namingPrefix = '${env}${(qualifyComponentAffix ? '${clientAffixTitleCase}${componentAffixTitleCase}' : clientAffixTitleCase)}${envIndexVar}'
 var resourceNames = {
   keyvault: '${namingPrefix}kv'
   sql: {
