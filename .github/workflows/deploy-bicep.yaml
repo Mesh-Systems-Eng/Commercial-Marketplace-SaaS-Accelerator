@@ -53,20 +53,19 @@ jobs:
           # Credentials inherited from parent workflow
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # - name: Read YAML variables
-      #   uses: pietrobolcato/action-read-yaml@1.0.0
-      #   id: yaml-data
-      #   with:
-      #     config: "$env:GITHUB_WORKSPACE/pipelines/variables.yml"
-      #     # config: ${{ inputs.variablesYamlPath }}
-      - run: ls -la
-      - name: Set ENV values from YAML
-        uses: dcarbone/yaml-to-env-action@v1.0.0
+      - name: Read YAML variables
+        uses: pietrobolcato/action-read-yaml@1.0.0
+        id: yaml-data
         with:
-          debug: true
-          yaml-file: '${{ inputs.variablesYamlPath }}'
-          yq-version: '4.27.5'
-      - run: echo '$env:VARIABLES_CLIENTAFFIX'
+          config: ${{ inputs.variablesYamlPath }}
+      # - run: ls -la
+      # - name: Set ENV values from YAML
+      #   uses: dcarbone/yaml-to-env-action@v1.0.0
+      #   with:
+      #     debug: true
+      #     yaml-file: '${{ inputs.variablesYamlPath }}'
+      #     yq-version: '4.27.5'
+      # - run: echo '$env:VARIABLES_CLIENTAFFIX'
 
       - run: |
           az account show
