@@ -54,10 +54,14 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Read YAML variables
-        uses: pietrobolcato/action-read-yaml@1.0.0
+        uses: jbutcher5/read-yaml@main
         id: yaml-data
         with:
-          config: ${{ inputs.variablesYamlPath }}
+          file: ${{ inputs.variablesYamlPath }}
+          key-path: '["variables"]'
+
+      - name: Get read-yaml output
+        run: echo '${{ steps.yaml-data.outputs.data}}'
 
       - run: |
           az account show
