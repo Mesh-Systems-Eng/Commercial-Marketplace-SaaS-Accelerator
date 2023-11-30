@@ -2,7 +2,6 @@ name: Deploy infrastructure
 
 on:
   workflow_dispatch:
-  workflow_call:
     inputs:
       bicepTemplatePath:
         description: "The path to the top-level bicep template, e.g. main.bicep"
@@ -32,6 +31,7 @@ on:
       doesKeyVaultExist:
         type: boolean
         default: true
+  workflow_call:
     # outputs:
     #   acrName:
     #     description: "Name of ACR"
