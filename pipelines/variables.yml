@@ -1,4 +1,5 @@
 variables:
+  # : Customer Information
   clientAffix: Mesh
   projectAffix: Comm
   componentAffix: Accel
@@ -7,6 +8,6 @@ variables:
   project: "Marketplace SaaS Accelerator"
   customer: "Mesh"
   repository: "Commercial-Marketplace-SaaS-Accelerator"
-
+  # : Common
   serviceConnection: Mesh_Olympus_Modules_Deploy
   resourceGroupLocation: eastus
