@@ -61,7 +61,7 @@ jobs:
           key-path: '["variables"]'
 
       - name: Get read-yaml output
-        run: echo '${{ steps.yaml-data.outputs.data['projectAffix'] }}'
+        run: echo '${{ steps.yaml-data.outputs.data.projectAffix }}'
 
       - run: |
           az account show
