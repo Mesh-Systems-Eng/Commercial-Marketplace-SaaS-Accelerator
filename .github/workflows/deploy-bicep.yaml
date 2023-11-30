@@ -24,7 +24,7 @@ on:
         default: "eastus"
       variablesYamlPath:
         type: string
-        default: "../../pipelines/variables.yml"
+        default: "./pipelines/variables.yml"
       vmImage:
         type: string
         default: "ubuntu-latest"
