@@ -23,10 +23,6 @@ resource sqlServer 'Microsoft.Sql/servers@2023-05-01-preview' = {
 
   resource allowAzureIp 'firewallRules' = {
     name: 'AllowAzureIP'
-    properties: {
-      startIpAddress: '0.0.0.0'
-      endIpAddress: '0.0.0.0'
-    }
   }
   resource allowIp 'firewallRules' = {
     name: 'AllowIP'

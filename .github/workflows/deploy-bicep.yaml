@@ -56,7 +56,7 @@ jobs:
       - name: Set ENV values from YAML
         uses: dcarbone/yaml-to-env-action@v1.0.0
         with:
-          debug: true
+          debug: false
           yaml-file: '${{ inputs.variablesYamlPath }}'
           yq-version: '4.27.5'
 
