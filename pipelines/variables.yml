@@ -4,10 +4,10 @@ variables:
   projectAffix: Comm
   componentAffix: Accel
   qualifyProjectAffix: false
-  owner: "Andrew Cohoat"
-  project: "Marketplace SaaS Accelerator"
-  customer: "Mesh"
-  repository: "Commercial-Marketplace-SaaS-Accelerator"
+  owner: Andrew Cohoat
+  project: Marketplace SaaS Accelerator
+  customer: Mesh
+  repository: Commercial-Marketplace-SaaS-Accelerator
 
   # : Common
   serviceConnection: Mesh_Olympus_Modules_Deploy
