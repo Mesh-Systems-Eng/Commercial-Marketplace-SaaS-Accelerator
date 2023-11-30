@@ -24,7 +24,7 @@ on:
         default: "eastus"
       variablesYamlPath:
         type: string
-        default: pipelines/variables.yml
+        default: "../../pipelines/variables.yml"
       vmImage:
         type: string
         default: "ubuntu-latest"
@@ -54,14 +54,10 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Read YAML variables
-        uses: jbutcher5/read-yaml@main
+        uses: pietrobolcato/action-read-yaml@1.0.0
         id: yaml-data
         with:
-          file: ${{ inputs.variablesYamlPath }}
-          key-path: '["variables"]'
-
-      - name: Get read-yaml output
-        run: echo '${{ steps.yaml-data.outputs.data.projectAffix }}'
+          config: ${{ inputs.variablesYamlPath }}
 
       - run: |
           az account show
@@ -76,10 +72,10 @@ jobs:
             --name azuredeploy-$($env:GITHUB_RUN_ATTEMPT) `
             --template-file ${{ inputs.bicepTemplatePath }} `
             --parameters `
-              clientAffix=${{ steps.yaml-data.outputs['clientAffix'] }} `
+              clientAffix=${{ steps.yaml-data.outputs['variables.clientAffix'] }} `
               env=${{ inputs.env }} `
-              projectAffix=${{ steps.yaml-data.outputs['projectAffix'] }} `
-              componentAffix=${{ steps.yaml-data.outputs['componentAffix'] }} `
+              projectAffix=${{ steps.yaml-data.outputs['variables.projectAffix'] }} `
+              componentAffix=${{ steps.yaml-data.outputs['variables.componentAffix'] }} `
               sqlAdminLogin=${{ secrets.SQL_ADMIN_LOGIN }} `
               sqlAdminLoginPassword=${{ secrets.SQL_ADMIN_LOGIN_PASSWORD }} `
               doesKeyVaultExist=${{ inputs.doesKeyVaultExist }} `
