@@ -24,7 +24,7 @@ on:
         default: "eastus"
       variablesYamlPath:
         type: string
-        default: ${{ github.workspace }}/pipelines/variables.yml
+        default: pipelines/variables.yml
       vmImage:
         type: string
         default: "ubuntu-latest"
@@ -57,8 +57,7 @@ jobs:
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: yaml-data
         with:
-          config: ${{ github.workspace }}/pipelines/variables.yml
-          # config: ${{ inputs.variablesYamlPath }}
+          config: ${{ inputs.variablesYamlPath }}
 
       - run: |
           az account show
