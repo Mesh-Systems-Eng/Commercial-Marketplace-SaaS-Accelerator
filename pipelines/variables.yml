@@ -1,14 +1,8 @@
-variables:
-  # : Customer Information
-  clientAffix: Mesh
-  projectAffix: Comm
-  componentAffix: Accel
-  qualifyProjectAffix: false
-  owner: Andrew Cohoat
-  project: Marketplace SaaS Accelerator
-  customer: Mesh
-  repository: Commercial-Marketplace-SaaS-Accelerator
-
-  # : Common
-  serviceConnection: Mesh_Olympus_Modules_Deploy
-  resourceGroupLocation: eastus
+clientAffix: Mesh
+projectAffix: Comm
+componentAffix: Accel
+qualifyProjectAffix: false
+owner: "Andrew Cohoat"
+project: "Marketplace SaaS Accelerator"
+customer: "Mesh"
+repository: "Commercial-Marketplace-SaaS-Accelerator"
