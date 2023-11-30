@@ -60,9 +60,17 @@ module sql 'modules/sql.bicep' = {
     kvName: keyvault.outputs.kvName
   }
 }
-// app service + kv secret ADApplicationSecret (secret 2/2)
 
-// app service plan
+// app service plan + app service + kv secret ADApplicationSecret (secret 2/2)
+module appService 'modules/apps.bicep' = {
+  name: '${componentAffix}AppService'
+  params: {
+    aspSku: config.outputs.settings.appServicePlan.sku
+    aspProperties: config.outputs.settings.appServicePlan.properties
+    location: location
+    resourceNames: resourceNames
+  }
+}
 
 // keyvault
 module keyvault 'modules/key-vault.bicep' = {

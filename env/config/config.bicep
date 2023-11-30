@@ -52,6 +52,20 @@ var environmentSettings = {
         capacity: 5
       }
     }
+    appServicePlan: {
+      sku: {
+        name: 'D1'
+        tier: 'Shared'
+        size: 'D1'
+        family: 'D'
+        capacity: 0
+      }
+      properties: {
+        maximumElasticWorkerCount: 1
+        targetWorkerCount: 0
+        targetWorkerSizeId: 0    
+      } 
+    }
     tags: {
       Owner: settings.variables.owner
       Project: settings.variables.project
@@ -75,6 +89,20 @@ var environmentSettings = {
         name: 'Basic'
         capacity: 5
       }
+    }
+    appServicePlan: {
+      sku: {
+        name: 'D1'
+        tier: 'Shared'
+        size: 'D1'
+        family: 'D'
+        capacity: 0
+      }
+      properties: {
+        maximumElasticWorkerCount: 1
+        targetWorkerCount: 0
+        targetWorkerSizeId: 0    
+      } 
     }
     tags: {
       Owner: settings.variables.owner
@@ -100,6 +128,20 @@ var environmentSettings = {
         capacity: 5
       }
     }
+    appServicePlan: {
+      sku: {
+        name: 'D1'
+        tier: 'Shared'
+        size: 'D1'
+        family: 'D'
+        capacity: 0
+      }
+      properties: {
+        maximumElasticWorkerCount: 1
+        targetWorkerCount: 0
+        targetWorkerSizeId: 0    
+      } 
+    }
     tags: {
       Owner: settings.variables.owner
       Project: settings.variables.project
@@ -123,6 +165,20 @@ var environmentSettings = {
         name: 'Basic'
         capacity: 5
       }
+    }
+    appServicePlan: {
+      sku: {
+        name: 'D1'
+        tier: 'Shared'
+        size: 'D1'
+        family: 'D'
+        capacity: 0
+      }
+      properties: {
+        maximumElasticWorkerCount: 1
+        targetWorkerCount: 0
+        targetWorkerSizeId: 0    
+      } 
     }
     tags: {
       Owner: settings.variables.owner
