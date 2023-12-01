@@ -108,7 +108,7 @@ jobs:
         id: first-deployment-script
         run: |
           ls -la
-          .github\deployment\Deploy.ps1 `
+          .\deployment\Deploy.ps1 `
            -NamingPrefix "${{ steps.bicep-outputs.outputs.namingPrefix }}" `
            -ResourceGroupForDeployment ${{ inputs.resourceGroup }} `
            -PublisherAdminUsers "<your@email.address>"
