@@ -104,9 +104,14 @@ jobs:
               Write-Host "BICEP outputs are null"
           }
 
-      - name: "print outputs"
+      - name: Deplo webapps and code
+        id: first-deployment-script
         run: |
-          Write-host "${{ steps.bicep-outputs.outputs.namingPrefix }}"
+          .\Deploy.ps1 `
+           -WebAppNamePrefix "${{ steps.bicep-outputs.outputs.namingPrefix }}" `
+           -ResourceGroupForDeployment ${{ inputs.resourceGroup }} `
+           -PublisherAdminUsers "<your@email.address>"
+
 
       - uses: actions/upload-artifact@v3
         with:
