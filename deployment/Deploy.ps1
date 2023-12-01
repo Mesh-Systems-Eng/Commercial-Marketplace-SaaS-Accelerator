@@ -6,7 +6,7 @@
 #
 
 #.\Deploy.ps1 `
-# -WebAppNamePrefix "amp_saas_accelerator_<unique>" `
+# -NamingPrefix "amp_saas_accelerator_<unique>" `
 # -ResourceGroupForDeployment "<saas_accelerator_resource_group_name>" `
 # -PublisherAdminUsers "<your@email.address>"
 
