@@ -85,3 +85,5 @@ module keyvault 'modules/key-vault.bicep' = {
     accessPolicies: config.outputs.settings.keyVault.accessPolicies
   }
 }
+
+output namingPrefix string = namingPrefix
