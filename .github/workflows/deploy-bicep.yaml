@@ -97,11 +97,16 @@ jobs:
                 $provisionOutputs | Add-Member -MemberType NoteProperty -Name $name -value $out.$name.value
                 Write-Host "BICEP output key/value -> $($name): $($out.$name.value)"
                 Set-Content -Path bicep-outputs/$($name) -Value $($out.$name.value)
+                echo "$($name)=$($out.$name.value)" >> $GITHUB_OUTPUT
               }
           }
           else {
               Write-Host "BICEP outputs are null"
           }
+
+      - name: "print outputs"
+        run: |
+          echo "${{ steps.bicep-outputs.outputs.namingPrefix }}"
 
       - uses: actions/upload-artifact@v3
         with:
