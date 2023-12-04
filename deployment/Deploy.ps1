@@ -14,8 +14,6 @@ Param(
    [string][Parameter(Mandatory)]$NamingPrefix, # Prefix used for creating web applications
    [string][Parameter(Mandatory)]$ResourceGroupForDeployment, # Name of the resource group to deploy the resources
    [string][Parameter(Mandatory)]$PublisherAdminUsers, # Provide a list of email addresses (as comma-separated-values) that should be granted access to the Publisher Portal
-   [string][Parameter()]$TenantID, # The value should match the value provided for Active Directory TenantID in the Technical Configuration of the Transactable Offer in Partner Center
-   [string][Parameter()]$AzureSubscriptionID, # Subscription where the resources be deployed
    [string][Parameter()]$ADApplicationID, # The value should match the value provided for Active Directory Application ID in the Technical Configuration of the Transactable Offer in Partner Center
    [string][Parameter()]$ADApplicationSecret, # Secret key of the AD Application
    [string][Parameter()]$ADMTApplicationID, # Multi-Tenant Active Directory Application ID
@@ -157,6 +155,7 @@ if (!($ADMTApplicationID)) {
 			}]
 	}]
 }
+Write-host "$appCreateRequestBodyJson"
 "@	
 		if ($PsVersionTable.Platform -ne 'Unix') {
 			#On Windows, we need to escape quotes and remove new lines before sending the payload to az rest. 
