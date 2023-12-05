@@ -23,6 +23,19 @@ Param(
    [switch][Parameter()]$Quiet #if set, only show error / warning output from script commands
 )
 
+Function String-Between
+{
+	[CmdletBinding()]
+	Param(
+		[Parameter(Mandatory=$true)][String]$Source,
+		[Parameter(Mandatory=$true)][String]$Start,
+		[Parameter(Mandatory=$true)][String]$End
+	)
+	$sIndex = $Source.indexOf($Start) + $Start.length
+	$eIndex = $Source.indexOf($End, $sIndex)
+	return $Source.Substring($sIndex, $eIndex-$sIndex)
+}
+
 # Make sure to install Az Module before running this script
 # Install-Module Az
 # Install-Module -Name AzureAD
@@ -74,8 +87,8 @@ Write-Host "🔑 Azure Subscription '$AzureSubscriptionID' selected."
 if($LogoURLpng) { 
     Write-Host "📷 Logo image provided"
 	Write-Host "   🔵 Downloading Logo image file"
-    Invoke-WebRequest -Uri $LogoURLpng -OutFile "../src/CustomerSite/wwwroot/contoso-sales.png"
-    Invoke-WebRequest -Uri $LogoURLpng -OutFile "../src/AdminSite/wwwroot/contoso-sales.png"
+    Invoke-WebRequest -Uri $LogoURLpng -OutFile "src/CustomerSite/wwwroot/contoso-sales.png"
+    Invoke-WebRequest -Uri $LogoURLpng -OutFile "src/AdminSite/wwwroot/contoso-sales.png"
     Write-Host "   🔵 Logo image downloaded"
 }
 
@@ -83,8 +96,8 @@ if($LogoURLpng) {
 if($LogoURLico) { 
     Write-Host "📷 Logo icon provided"
 	Write-Host "   🔵 Downloading Logo icon file"
-    Invoke-WebRequest -Uri $LogoURLico -OutFile "../src/CustomerSite/wwwroot/favicon.ico"
-    Invoke-WebRequest -Uri $LogoURLico -OutFile "../src/AdminSite/wwwroot/favicon.ico"
+    Invoke-WebRequest -Uri $LogoURLico -OutFile "src/CustomerSite/wwwroot/favicon.ico"
+    Invoke-WebRequest -Uri $LogoURLico -OutFile "src/AdminSite/wwwroot/favicon.ico"
     Write-Host "   🔵 Logo icon downloaded"
 }
 
@@ -277,21 +290,21 @@ Write-host "📜 Deploy Code"
 
 Write-host "   🔵 Deploy Database"
 Write-host "      ➡️ Generate SQL schema/data script"
-Set-Content -Path ../src/AdminSite/appsettings.Development.json -value "{`"ConnectionStrings`": {`"DefaultConnection`":`"$Connection`"}}"
-dotnet-ef migrations script  --output script.sql --idempotent --context SaaSKitContext --project ../src/DataAccess/DataAccess.csproj --startup-project ../src/AdminSite/AdminSite.csproj
+Set-Content -Path src/AdminSite/appsettings.Development.json -value "{`"ConnectionStrings`": {`"DefaultConnection`":`"$Connection`"}}"
+dotnet-ef migrations script  --output script.sql --idempotent --context SaaSKitContext --project src/DataAccess/DataAccess.csproj --startup-project src/AdminSite/AdminSite.csproj
 Write-host "      ➡️ Execute SQL schema/data script"
 Invoke-Sqlcmd -InputFile ./script.sql -ServerInstance $ServerUri -database $SQLDatabaseName -Username $SQLAdminLogin -Password $SQLAdminLoginPassword 
 
 Write-host "   🔵 Deploy Code to Admin Portal"
-az webapp deploy --resource-group $ResourceGroupForDeployment --name $WebAppNameAdmin --src-path "../Publish/AdminSite.zip" --type zip --output $azCliOutput
+az webapp deploy --resource-group $ResourceGroupForDeployment --name $WebAppNameAdmin --src-path "Publish/AdminSite.zip" --type zip --output $azCliOutput
 
 Write-host "   🔵 Deploy Code to Customer Portal"
-az webapp deploy --resource-group $ResourceGroupForDeployment --name $WebAppNamePortal --src-path "../Publish/CustomerSite.zip" --type zip --output $azCliOutput
+az webapp deploy --resource-group $ResourceGroupForDeployment --name $WebAppNamePortal --src-path "Publish/CustomerSite.zip" --type zip --output $azCliOutput
 
 Write-host "   🔵 Clean up"
-Remove-Item -Path ../src/AdminSite/appsettings.Development.json
+Remove-Item -Path src/AdminSite/appsettings.Development.json
 Remove-Item -Path script.sql
-#Remove-Item -Path ../Publish -recurse -Force
+#Remove-Item -Path Publish -recurse -Force
 
 #endregion
 
