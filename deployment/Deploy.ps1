@@ -201,8 +201,6 @@ if (!($ADMTApplicationID)) {
 #region Prepare Code Packages
 Write-host "📜 Prepare publish files for the application"
 if (!(Test-Path './Publish')) {		
-	Write-host "   🔵 checking current path"
-	ls -la  
 	Write-host "   🔵 Preparing Admin Site"  
 	dotnet publish src/AdminSite/AdminSite.csproj -c debug -o Publish/AdminSite/ -v q
 
