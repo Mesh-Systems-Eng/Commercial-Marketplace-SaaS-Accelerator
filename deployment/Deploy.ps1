@@ -289,6 +289,8 @@ az webapp config set -g $ResourceGroupForDeployment -n $WebAppNamePortal --alway
 Write-host "📜 Deploy Code"
 
 Write-host "   🔵 Deploy Database"
+Write-host "      ➡️ Install dotnet-ef tool"
+dotnet tool install --global dotnet-ef
 Write-host "      ➡️ Generate SQL schema/data script"
 Set-Content -Path src/AdminSite/appsettings.Development.json -value "{`"ConnectionStrings`": {`"DefaultConnection`":`"$Connection`"}}"
 dotnet-ef migrations script  --output script.sql --idempotent --context SaaSKitContext --project src/DataAccess/DataAccess.csproj --startup-project src/AdminSite/AdminSite.csproj
