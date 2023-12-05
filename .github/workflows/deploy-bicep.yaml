@@ -111,7 +111,10 @@ jobs:
           .\deployment\Deploy.ps1 `
            -NamingPrefix "${{ steps.bicep-outputs.outputs.namingPrefix }}" `
            -ResourceGroupForDeployment ${{ inputs.resourceGroup }} `
-           -PublisherAdminUsers "<your@email.address>"
+           -PublisherAdminUsers "<your@email.address>" `
+           -ADApplicationID "testId12334567" `
+           -ADApplicationSecret "testSecret1234567" `
+           -ADMTApplicationID "testId12334567"
 
 
       - uses: actions/upload-artifact@v3

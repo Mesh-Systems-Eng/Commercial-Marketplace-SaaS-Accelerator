@@ -155,46 +155,46 @@ if (!($ADMTApplicationID)) {
 			}]
 	}]
 }
-Write-host "$appCreateRequestBodyJson"
-"@	
-		if ($PsVersionTable.Platform -ne 'Unix') {
-			#On Windows, we need to escape quotes and remove new lines before sending the payload to az rest. 
-			# See: https://github.com/Azure/azure-cli/blob/dev/doc/quoting-issues-with-powershell.md#double-quotes--are-lost
-			$appCreateRequestBodyJson = $appCreateRequestBodyJson.replace('"','\"').replace("`r`n","")
-		}
+Write-host "📃 appCreateRequestBodyJson is $appCreateRequestBodyJson"
+# "@	
+# 		if ($PsVersionTable.Platform -ne 'Unix') {
+# 			#On Windows, we need to escape quotes and remove new lines before sending the payload to az rest. 
+# 			# See: https://github.com/Azure/azure-cli/blob/dev/doc/quoting-issues-with-powershell.md#double-quotes--are-lost
+# 			$appCreateRequestBodyJson = $appCreateRequestBodyJson.replace('"','\"').replace("`r`n","")
+# 		}
 
-		$landingpageLoginAppReg = $(az rest --method POST --headers "Content-Type=application/json" --uri https://graph.microsoft.com/v1.0/applications --body $appCreateRequestBodyJson  ) | ConvertFrom-Json
+# 		$landingpageLoginAppReg = $(az rest --method POST --headers "Content-Type=application/json" --uri https://graph.microsoft.com/v1.0/applications --body $appCreateRequestBodyJson  ) | ConvertFrom-Json
 	
-		$ADMTApplicationID = $landingpageLoginAppReg.appId
-		$ADMTObjectID = $landingpageLoginAppReg.id
+# 		$ADMTApplicationID = $landingpageLoginAppReg.appId
+# 		$ADMTObjectID = $landingpageLoginAppReg.id
 	
-        Write-Host "   🔵 Landing Page SSO App Registration created."
-		Write-Host "      ➡️ Application Id: $ADMTApplicationID"
+#         Write-Host "   🔵 Landing Page SSO App Registration created."
+# 		Write-Host "      ➡️ Application Id: $ADMTApplicationID"
 	
-		# Download Publisher's AppRegistration logo
-        if($LogoURLpng) { 
-			Write-Host "   🔵 Logo image provided. Setting the Application branding logo"
-			Write-Host "      ➡️ Setting the Application branding logo"
-			$token=(az account get-access-token --resource "https://graph.microsoft.com" --query accessToken --output tsv)
-			$logoWeb = Invoke-WebRequest $LogoURLpng
-			$logoContentType = $logoWeb.Headers["Content-Type"]
-			$logoContent = $logoWeb.Content
+# 		# Download Publisher's AppRegistration logo
+#         if($LogoURLpng) { 
+# 			Write-Host "   🔵 Logo image provided. Setting the Application branding logo"
+# 			Write-Host "      ➡️ Setting the Application branding logo"
+# 			$token=(az account get-access-token --resource "https://graph.microsoft.com" --query accessToken --output tsv)
+# 			$logoWeb = Invoke-WebRequest $LogoURLpng
+# 			$logoContentType = $logoWeb.Headers["Content-Type"]
+# 			$logoContent = $logoWeb.Content
 			
-			$uploaded = Invoke-WebRequest `
-			  -Uri "https://graph.microsoft.com/v1.0/applications/$ADMTObjectID/logo" `
-			  -Method "PUT" `
-			  -Header @{"Authorization"="Bearer $token";"Content-Type"="$logoContentType";} `
-			  -Body $logoContent
+# 			$uploaded = Invoke-WebRequest `
+# 			  -Uri "https://graph.microsoft.com/v1.0/applications/$ADMTObjectID/logo" `
+# 			  -Method "PUT" `
+# 			  -Header @{"Authorization"="Bearer $token";"Content-Type"="$logoContentType";} `
+# 			  -Body $logoContent
 		    
-			Write-Host "      ➡️ Application branding logo set."
-        }
+# 			Write-Host "      ➡️ Application branding logo set."
+#         }
 
-    }
-    catch [System.Net.WebException],[System.IO.IOException] {
-        Write-Host "🚨🚨   $PSItem.Exception"
-        break;
-    }
-}
+#     }
+#     catch [System.Net.WebException],[System.IO.IOException] {
+#         Write-Host "🚨🚨   $PSItem.Exception"
+#         break;
+#     }
+# }
 
 #endregion
 
