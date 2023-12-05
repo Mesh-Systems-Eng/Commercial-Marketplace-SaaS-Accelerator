@@ -45,6 +45,8 @@ $Pass = String-Between -source $ConnectionString -start "Password=" -end ";"
 Write-host "## Retrieved ConnectionString from KeyVault"
 Set-Content -Path ../src/AdminSite/appsettings.Development.json -value "{`"ConnectionStrings`": {`"DefaultConnection`":`"$ConnectionString`"}}"
 
+
+dotnet tool install --global dotnet-ef
 dotnet-ef migrations script `
 	--idempotent `
 	--context SaaSKitContext `
