@@ -289,6 +289,8 @@ az webapp config set -g $ResourceGroupForDeployment -n $WebAppNamePortal --alway
 Write-host "📜 Deploy Code"
 
 Write-host "   🔵 Deploy Database"
+Write-host "      ➡️ Install SQL module"
+Install-Module -Name SqlServer
 Write-host "      ➡️ Install dotnet-ef tool"
 dotnet tool install --global dotnet-ef
 Write-host "      ➡️ Generate SQL schema/data script"

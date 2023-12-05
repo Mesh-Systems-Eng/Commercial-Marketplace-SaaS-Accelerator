@@ -47,6 +47,8 @@ Set-Content -Path ../src/AdminSite/appsettings.Development.json -value "{`"Conne
 
 
 dotnet tool install --global dotnet-ef
+Install-Module -Name SqlServer
+
 dotnet-ef migrations script `
 	--idempotent `
 	--context SaaSKitContext `
