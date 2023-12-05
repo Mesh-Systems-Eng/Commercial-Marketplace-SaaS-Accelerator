@@ -118,44 +118,44 @@ if (!($ADApplicationID)) {
 #Create Multi-Tenant App Registration for Landing Page User Login
 if (!($ADMTApplicationID)) {  
     Write-Host "🔑 Creating Landing Page SSO App Registration"
-    try {
+#     try {
 	
-		$appCreateRequestBodyJson = @"
-{
-	"displayName" : "$NamingPrefix-LandingpageAppReg",
-	"api": 
-	{
-		"requestedAccessTokenVersion" : 2
-	},
-	"signInAudience" : "AzureADandPersonalMicrosoftAccount",
-	"web":
-	{ 
-		"redirectUris": 
-		[
-			"https://$($NamingPrefix)Portal.azurewebsites.net",
-			"https://$($NamingPrefix)Portal.azurewebsites.net/",
-			"https://$($NamingPrefix)Portal.azurewebsites.net/Home/Index",
-			"https://$($NamingPrefix)Portal.azurewebsites.net/Home/Index/",
-			"https://$($NamingPrefix)Admin.azurewebsites.net",
-			"https://$($NamingPrefix)Admin.azurewebsites.net/",
-			"https://$($NamingPrefix)Admin.azurewebsites.net/Home/Index",
-			"https://$($NamingPrefix)Admin.azurewebsites.net/Home/Index/"
-		],
-		"logoutUrl": "https://$($NamingPrefix)Portal.azurewebsites.net/logout",
-		"implicitGrantSettings": 
-			{ "enableIdTokenIssuance" : true }
-	},
-	"requiredResourceAccess":
-	[{
-		"resourceAppId": "00000003-0000-0000-c000-000000000000",
-		"resourceAccess":
-			[{ 
-				"id": "e1fe6dd8-ba31-4d61-89e7-88639da4683d",
-				"type": "Scope" 
-			}]
-	}]
-}
-Write-host "📃 appCreateRequestBodyJson is $appCreateRequestBodyJson"
+# 		$appCreateRequestBodyJson = @"
+# {
+# 	"displayName" : "$NamingPrefix-LandingpageAppReg",
+# 	"api": 
+# 	{
+# 		"requestedAccessTokenVersion" : 2
+# 	},
+# 	"signInAudience" : "AzureADandPersonalMicrosoftAccount",
+# 	"web":
+# 	{ 
+# 		"redirectUris": 
+# 		[
+# 			"https://$($NamingPrefix)Portal.azurewebsites.net",
+# 			"https://$($NamingPrefix)Portal.azurewebsites.net/",
+# 			"https://$($NamingPrefix)Portal.azurewebsites.net/Home/Index",
+# 			"https://$($NamingPrefix)Portal.azurewebsites.net/Home/Index/",
+# 			"https://$($NamingPrefix)Admin.azurewebsites.net",
+# 			"https://$($NamingPrefix)Admin.azurewebsites.net/",
+# 			"https://$($NamingPrefix)Admin.azurewebsites.net/Home/Index",
+# 			"https://$($NamingPrefix)Admin.azurewebsites.net/Home/Index/"
+# 		],
+# 		"logoutUrl": "https://$($NamingPrefix)Portal.azurewebsites.net/logout",
+# 		"implicitGrantSettings": 
+# 			{ "enableIdTokenIssuance" : true }
+# 	},
+# 	"requiredResourceAccess":
+# 	[{
+# 		"resourceAppId": "00000003-0000-0000-c000-000000000000",
+# 		"resourceAccess":
+# 			[{ 
+# 				"id": "e1fe6dd8-ba31-4d61-89e7-88639da4683d",
+# 				"type": "Scope" 
+# 			}]
+# 	}]
+# }
+# Write-host "📃 appCreateRequestBodyJson is $appCreateRequestBodyJson"
 # "@	
 # 		if ($PsVersionTable.Platform -ne 'Unix') {
 # 			#On Windows, we need to escape quotes and remove new lines before sending the payload to az rest. 
@@ -190,11 +190,11 @@ Write-host "📃 appCreateRequestBodyJson is $appCreateRequestBodyJson"
 #         }
 
 #     }
-#     catch [System.Net.WebException],[System.IO.IOException] {
-#         Write-Host "🚨🚨   $PSItem.Exception"
-#         break;
-#     }
-# }
+    catch [System.Net.WebException],[System.IO.IOException] {
+        Write-Host "🚨🚨   $PSItem.Exception"
+        break;
+    }
+}
 
 #endregion
 
