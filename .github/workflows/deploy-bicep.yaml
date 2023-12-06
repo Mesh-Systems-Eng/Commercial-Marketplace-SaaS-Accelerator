@@ -67,10 +67,14 @@ jobs:
 
       - run: |
           $KeyVault = "${{ inputs.env }}"+"$env:VARIABLES_CLIENTAFFIX"+"$env:VARIABLES_COMPONENTAFFIX"+"kv_cutthis"
-          $KeyVault = az keyvault show --name $KeyVault -g ${{ inputs.resourceGroup }}
-          Write-host "$KeyVault"
-          $keyVaultExists = ($null -ne $KeyVault) -and ("" -ne $KeyVault)
-          Write-Host "Keyvault exists: $keyVaultExists"
+          try {
+            $KeyVault = az keyvault show --name $KeyVault -g ${{ inputs.resourceGroup }}
+            $kvExists = $true
+          }
+          catch {
+            $kvExists = $false
+          }
+          Write-host "$kvExists"
       
       - name: Deploy Bicep Template
         id: bicep-deploy
