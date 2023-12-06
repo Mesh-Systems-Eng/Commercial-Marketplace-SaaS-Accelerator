@@ -81,6 +81,7 @@ jobs:
             }
           }
           $KeyVaultName = "${{ inputs.env }}"+"$env:VARIABLES_CLIENTAFFIX"+"$env:VARIABLES_COMPONENTAFFIX"+"kv"
+          Write-host "az keyvault list -g ${{ inputs.resourceGroup }} --query ""[?name=='$($KeyVaultName)'] | length(@)""" 
           $doesKvAlreadyExist = Invoke-Expression -Command "az keyvault list -g ${{ inputs.resourceGroup }} --query ""[?name=='$($KeyVaultName)'] | length(@)""" 
           $doesKvAlreadyExist = ConvertTo-Boolean($doesKvAlreadyExist)
           Write-Host "doesKvAlreadyExist: $doesKvAlreadyExist"
