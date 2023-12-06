@@ -29,9 +29,9 @@ on:
       vmImage:
         type: string
         default: "ubuntu-latest"
-      # doesKeyVaultExist:
-      #   type: boolean
-      #   default: true
+      doesKeyVaultExist:
+        type: boolean
+        default: true
   workflow_call:
     # outputs:
     #   acrName:
@@ -80,8 +80,8 @@ jobs:
               0 { return $false; }
             }
           }
-          $KeyVault = "${{ inputs.env }}"+"$env:VARIABLES_CLIENTAFFIX"+"$env:VARIABLES_COMPONENTAFFIX"+"kv"
-          $doesKvAlreadyExist = Invoke-Expression -Command "az keyvault list -g ${{ inputs.resourceGroup }} --query ""[?name=='$($KeyVault)'] | length(@)""" 
+          $KeyVaultName = "${{ inputs.env }}"+"$env:VARIABLES_CLIENTAFFIX"+"$env:VARIABLES_COMPONENTAFFIX"+"kv"
+          $doesKvAlreadyExist = Invoke-Expression -Command "az keyvault list -g ${{ inputs.resourceGroup }} --query ""[?name=='$($KeyVaultName)'] | length(@)""" 
           $doesKvAlreadyExist = ConvertTo-Boolean($doesKvAlreadyExist)
           Write-Host "doesKvAlreadyExist: $doesKvAlreadyExist"
           echo "::set-output name=doesKeyVaultExist::$($doesKvAlreadyExist)"
@@ -102,7 +102,7 @@ jobs:
               qualifyComponentAffix=true `
               sqlAdminLogin=${{ secrets.SQL_ADMIN_LOGIN }} `
               sqlAdminLoginPassword=${{ secrets.SQL_ADMIN_LOGIN_PASSWORD }} `
-              doesKeyVaultExist=${{ steps.doesKeyVaultExist.outputs.doesKeyVaultExist }} `
+              doesKeyVaultExist=${{ inputs.doesKeyVaultExist }} `
               ${{ inputs.additionalBicepParameters }}
 
       - name: "Capture Bicep Outputs"
