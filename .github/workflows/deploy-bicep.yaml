@@ -67,7 +67,7 @@ jobs:
 
       - run: |
           $KeyVault = "${{ inputs.env }}"+"$env:VARIABLES_CLIENTAFFIX"+"$env:VARIABLES_COMPONENTAFFIX"+"kv"
-          $KeyVault = az keyvault show --name Sd2MeshSasaccelkv -g ${{ inputs.resourceGroup }}
+          $KeyVault = az keyvault show --name $KeyVault -g ${{ inputs.resourceGroup }}
           Write-host "$KeyVault"
           $keyVaultExists = ($null -ne $KeyVault) -and ("" -ne $KeyVault)
           Write-Host "Keyvault exists: $keyVaultExists"
