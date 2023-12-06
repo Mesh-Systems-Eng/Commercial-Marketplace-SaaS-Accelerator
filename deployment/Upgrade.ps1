@@ -43,17 +43,19 @@ $User = String-Between -source $ConnectionString -start "User Id=" -end ";"
 $Pass = String-Between -source $ConnectionString -start "Password=" -end ";"
 
 Write-host "## Retrieved ConnectionString from KeyVault"
-Set-Content -Path ../src/AdminSite/appsettings.Development.json -value "{`"ConnectionStrings`": {`"DefaultConnection`":`"$ConnectionString`"}}"
+Set-Content -Path src/AdminSite/appsettings.Development.json -value "{`"ConnectionStrings`": {`"DefaultConnection`":`"$ConnectionString`"}}"
 
 
+Write-host "     💽 ➡️ Install SQL module"
+Install-Module -Name SqlServer -Confirm:$False -Force
+Write-host "     💽 ➡️ Install dotnet-ef tool"
 dotnet tool install --global dotnet-ef
-Install-Module -Name SqlServer
 
 dotnet-ef migrations script `
 	--idempotent `
 	--context SaaSKitContext `
-	--project ../src/DataAccess/DataAccess.csproj `
-	--startup-project ../src/AdminSite/AdminSite.csproj `
+	--project src/DataAccess/DataAccess.csproj `
+	--startup-project src/AdminSite/AdminSite.csproj `
 	--output script.sql
 	
 Write-host "## Generated migration script"	
@@ -88,7 +90,7 @@ Write-host "## Ran compatibility script against database"
 Invoke-Sqlcmd -inputFile script.sql -ServerInstance $Server -database $Database -Username $User -Password $Pass
 Write-host "## Ran migration against database"	
 
-Remove-Item -Path ../src/AdminSite/appsettings.Development.json
+Remove-Item -Path src/AdminSite/appsettings.Development.json
 Remove-Item -Path script.sql
 Write-host "#### Database Deployment complete ####"	
 
@@ -96,22 +98,22 @@ Write-host "#### Database Deployment complete ####"
 
 Write-host "#### Deploying new code ####" 
 
-dotnet publish ../src/AdminSite/AdminSite.csproj -v q -c debug -o ../Publish/AdminSite/
+dotnet publish src/AdminSite/AdminSite.csproj -v q -c debug -o Publish/AdminSite/
 Write-host "## Admin Portal built" 
-dotnet publish ../src/MeteredTriggerJob/MeteredTriggerJob.csproj -v q -c debug -o ../Publish/AdminSite/app_data/jobs/triggered/MeteredTriggerJob --runtime win-x64 --self-contained true 
+dotnet publish src/MeteredTriggerJob/MeteredTriggerJob.csproj -v q -c debug -o Publish/AdminSite/app_data/jobs/triggered/MeteredTriggerJob --runtime win-x64 --self-contained true 
 Write-host "## Metered Scheduler to Admin Portal Built"
-dotnet publish ../src/CustomerSite/CustomerSite.csproj -v q -c debug -o ../Publish/CustomerSite
+dotnet publish src/CustomerSite/CustomerSite.csproj -v q -c debug -o Publish/CustomerSite
 Write-host "## Customer Portal Built" 
 
-Compress-Archive -Path ../Publish/CustomerSite/* -DestinationPath ../Publish/CustomerSite.zip -Force
-Compress-Archive -Path ../Publish/AdminSite/* -DestinationPath ../Publish/AdminSite.zip -Force
+Compress-Archive -Path Publish/CustomerSite/* -DestinationPath Publish/CustomerSite.zip -Force
+Compress-Archive -Path Publish/AdminSite/* -DestinationPath Publish/AdminSite.zip -Force
 Write-host "## Code packages prepared." 
 
 Write-host "## Deploying code to Admin Portal"
 az webapp deploy `
 	--resource-group $ResourceGroupForDeployment `
 	--name $WebAppNameAdmin `
-	--src-path "../Publish/AdminSite.zip" `
+	--src-path "Publish/AdminSite.zip" `
 	--type zip
 Write-host "## Deployed code to Admin Portal"
 
@@ -119,9 +121,9 @@ Write-host "## Deploying code to Customer Portal"
 az webapp deploy `
 	--resource-group $ResourceGroupForDeployment `
 	--name $WebAppNamePortal `
-	--src-path "../Publish/CustomerSite.zip"  `
+	--src-path "Publish/CustomerSite.zip"  `
 	--type zip
 Write-host "## Deployed code to Customer Portal"
 
-Remove-Item -Path ../Publish -recurse -Force
+Remove-Item -Path Publish -recurse -Force
 Write-host "#### Code deployment complete ####" 

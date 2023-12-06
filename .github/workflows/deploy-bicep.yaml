@@ -65,6 +65,12 @@ jobs:
           az account show
           az group create --name ${{ inputs.resourceGroup }} --location ${{ inputs.resourceGroupLocation }}
 
+      - run: |
+          $KeyVault = "${{ inputs.env }}"+"$env:VARIABLES_CLIENTAFFIX"+"$env:VARIABLES_COMPONENTAFFIX"+"kv"
+          $KeyVault = Get-AzKeyVault -Name $KeyVault -ResourceGroupName ${{ inputs.resourceGroup }} -ErrorAction SilentlyContinue
+          $keyVaultExists = ($null -ne $KeyVault) -and ("" -ne $KeyVault)
+          Write-Host "Keyvault exists: $keyVaultExists"
+      
       - name: Deploy Bicep Template
         id: bicep-deploy
         run: |
