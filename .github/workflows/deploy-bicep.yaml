@@ -66,6 +66,18 @@ jobs:
           az group create --name ${{ inputs.resourceGroup }} --location ${{ inputs.resourceGroupLocation }}
 
       - run: |
+          function ConvertTo-Boolean
+          {
+            param
+            (
+              [Parameter(Mandatory=$false)][string] $value
+            )
+            switch ($value)
+            {
+              1 { return $true; }
+              0 { return $false; }
+            }
+          }
           $KeyVault = "${{ inputs.env }}"+"$env:VARIABLES_CLIENTAFFIX"+"$env:VARIABLES_COMPONENTAFFIX"+"kv_cutthis"
           $doesKvAlreadyExist = Invoke-Expression -Command "az keyvault list -g ${{ inputs.resourceGroup }} --query ""[?name=='$($KeyVault)'] | length(@)""" 
           $doesKvAlreadyExist = ConvertTo-Boolean($doesKvAlreadyExist)
