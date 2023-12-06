@@ -2,7 +2,7 @@ variables:
   # : Customer Information
   clientAffix: Mesh
   projectAffix: Comm
-  componentAffix: SasAccel
+  componentAffix: Sasaccel
   qualifyProjectAffix: false
   owner: "Andrew Cohoat"
   project: "Marketplace SaaS Accelerator"
