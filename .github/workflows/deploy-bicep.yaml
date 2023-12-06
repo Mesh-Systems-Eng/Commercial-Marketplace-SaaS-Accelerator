@@ -67,14 +67,10 @@ jobs:
 
       - run: |
           $KeyVault = "${{ inputs.env }}"+"$env:VARIABLES_CLIENTAFFIX"+"$env:VARIABLES_COMPONENTAFFIX"+"kv_cutthis"
-          try {
-            $KeyVault = az keyvault show --name $KeyVault -g ${{ inputs.resourceGroup }}
-            $kvExists = $true
-          }
-          catch {
-            $kvExists = $false
-          }
-          Write-host "$kvExists"
+          $doesKvAlreadyExist = Invoke-Expression -Command "az keyvault list -g ${{ inputs.resourceGroup }} --query ""[?name=='$($KeyVault)'] | length(@)""" 
+          $doesKvAlreadyExist = ConvertTo-Boolean($doesKvAlreadyExist)
+          Write-Host "doesKvAlreadyExist: $doesKvAlreadyExist"
+
       
       - name: Deploy Bicep Template
         id: bicep-deploy
