@@ -38,14 +38,14 @@ wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh; `
 chmod +x dotnet-install.sh; `
 ./dotnet-install.sh -version 8.0.303; `
 $ENV:PATH="$HOME/.dotnet:$ENV:PATH"; `
-dotnet tool install --global dotnet-ef --version 8.0.0; `
+dotnet tool install --global dotnet-ef --version 8.0.6; `
 git clone https://github.com/Azure/Commercial-Marketplace-SaaS-Accelerator.git -b 8.2.1 --depth 1; `
 cd ./Commercial-Marketplace-SaaS-Accelerator/deployment; `
 .\Deploy.ps1 `
- -WebAppNamePrefix "SOME-UNIQUE-STRING" `
- -ResourceGroupForDeployment "SOME-RG-NAME" `
- -PublisherAdminUsers "user1@email.com,user2@email" `
- -Location "East US" 
+ -WebAppNamePrefix "PdMarketAccel" `
+ -ResourceGroupForDeployment "rg-marketplace-accelerator-pd" `
+ -PublisherAdminUsers "austin.delarosa@meshsystems.com,mike.coleman@meshsystems.com,kyle.burns@meshsystems.com" `
+ -Location "Central US" 
  ```
 
 The script above will perform the following actions.
@@ -85,7 +85,7 @@ wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh; `
 chmod +x dotnet-install.sh; `
 ./dotnet-install.sh -version 8.0.303; `
 $ENV:PATH="$HOME/.dotnet:$ENV:PATH"; `
-dotnet tool install --global dotnet-ef --version 8.0.0; `
+dotnet tool install --global dotnet-ef --version 8.0.6; `
 git clone https://github.com/Azure/Commercial-Marketplace-SaaS-Accelerator.git -b <release-version-branch-to-deploy> --depth 1; `
 cd ./Commercial-Marketplace-SaaS-Accelerator/deployment; `
 .\Upgrade.ps1 `
@@ -122,6 +122,27 @@ The video is rather lengthy, so use the chapter links in the video description t
 
 ## Alternative deployments
 There are other ways to deploy the SaaS Accelerator environment (e.g. development, maual deployment, etc).  Additional instruction can be found [here](Advanced-Instructions.md).
+
+For local deployment from macOS, run the script from PowerShell 7 with Azure CLI authenticated and the Az PowerShell module installed:
+
+```powershell
+az login --tenant <tenant-id>
+Invoke-WebRequest https://dot.net/v1/dotnet-install.sh -OutFile dotnet-install.sh
+chmod +x ./dotnet-install.sh
+./dotnet-install.sh -version 8.0.303
+$ENV:PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$ENV:PATH"
+dotnet tool install --global dotnet-ef --version 8.0.6
+Install-Module -Name Az -AllowClobber
+Install-Module -Name SqlServer -AllowClobber
+cd ./Commercial-Marketplace-SaaS-Accelerator/deployment
+./Deploy.ps1 `
+ -WebAppNamePrefix "SOME-UNIQUE-STRING" `
+ -ResourceGroupForDeployment "SOME-RG-NAME" `
+ -PublisherAdminUsers "user1@email.com,user2@email.com" `
+ -Location "East US" `
+ -TenantID "tenant-id" `
+ -AzureSubscriptionID "subscription-id"
+```
 
 ## Authentication between the WebApps and the Database
 The Webapps uses Managed Identity to communicate with the database. The Managed Identity is created during the deployment of the WebApps. The Managed Identity is then used to create a user in the database and grant the user the necessary permissions. The connection string used by the WebApps to connect to the database is then updated to use the Managed Identity.

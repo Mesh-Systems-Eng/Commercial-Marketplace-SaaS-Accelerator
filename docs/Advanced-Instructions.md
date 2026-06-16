@@ -51,25 +51,38 @@ cd ./Commercial-Marketplace-SaaS-Accelerator/deployment; `
 
 ### Local deployment
 
-   1. Install Powershell 7.0.2
+   1. Install PowerShell 7.
    - [Windows Store](https://www.microsoft.com/store/productId/9MZ1SNWT0N5D)
    - [GitHub](https://github.com/PowerShell/PowerShell/releases)
-   2. Start a Windows PowerShell window as administrator and run the following commands to install Azure modules:
-> Note: Make sure that you are using the latest Powershell version to avoid issues in Compress-Archive in 5.1 that got resolved in the latest version.
+   - [macOS install instructions](https://learn.microsoft.com/powershell/scripting/install/installing-powershell-on-macos)
+   2. Install the Azure CLI and sign in with the subscription that will host the deployment.
+```powershell
+az login --tenant <tenant-id>
+```
+   3. Install the .NET SDK version pinned by `global.json` and the Entity Framework CLI tool.
+```powershell
+Invoke-WebRequest https://dot.net/v1/dotnet-install.sh -OutFile dotnet-install.sh
+chmod +x ./dotnet-install.sh
+./dotnet-install.sh -version 8.0.303
+$ENV:PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$ENV:PATH"
+dotnet tool install --global dotnet-ef --version 8.0.6
+```
+   4. Start PowerShell 7 (`pwsh`) and run the following command to install Azure modules:
+> Note: Make sure that you are using the latest PowerShell version to avoid issues in Compress-Archive in 5.1 that got resolved in the latest version.
 ```powershell
 Install-Module -Name Az -AllowClobber
+Install-Module -Name SqlServer -AllowClobber
 ```
-   3. Clone the repository
-   4. Navigate to the folder **.\deployment**
-   5. Set the priorities running
+   5. Clone the repository
+   6. Navigate to the folder **./deployment**
+   7. On Windows, set the execution policy for the current PowerShell process.
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
-   6. Choose "A", to change the policy to Yes to All. If you get a permission error, you can try:
+   8. Choose "A", to change the policy to Yes to All. If you get a permission error, you can try:
         * Run the PowerShell terminal as an Administrator
         * Set the priorities running Set-ExecutionPolicy -ExecutionPolicy unrestricted.
-   7. Run the command **Connect-AzureAD -Confirm** for the App Registration
-   8. Run the command **.\Deploy.ps1** with the following paramters
+   9. Run the command **./Deploy.ps1** with the following parameters
 
 | Parameter | Description |
 |-----------| -------------|
@@ -91,7 +104,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 > **Example** 
 ```powershell
-.\Deploy.ps1 `
+./Deploy.ps1 `
     -WebAppNamePrefix "contoso" `
     -TenantID "tenandId" `
     -ADApplicationID "single-tenant clientId" `
