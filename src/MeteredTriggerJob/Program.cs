@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using Azure.Identity;
 using Marketplace.SaaS.Accelerator.DataAccess.Context;
 using Marketplace.SaaS.Accelerator.DataAccess.Contracts;
@@ -36,11 +38,11 @@ class Program
             ClientSecret = configuration["SaaSApiConfiguration:ClientSecret"],
             GrantType = configuration["SaaSApiConfiguration:GrantType"],
             Resource = configuration["SaaSApiConfiguration:Resource"],
-            TenantId = configuration["SaaSApiConfiguration:TenantId"],
-            SupportMeteredBilling = Convert.ToBoolean(configuration["SaaSApiConfiguration:SupportMeteredBilling"])
+            TenantId = configuration["SaaSApiConfiguration:TenantId"]
         };
 
         var creds = new ClientSecretCredential(config.TenantId.ToString(), config.ClientId.ToString(), config.ClientSecret);
+        var versionInfo = new AppVersionService(Assembly.GetExecutingAssembly()?.GetName()?.Version);
 
         var services = new ServiceCollection()
             .AddDbContext<SaasKitContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient)
@@ -54,6 +56,7 @@ class Program
             .AddScoped<IApplicationConfigRepository, ApplicationConfigRepository>()
             .AddSingleton<IMeteredBillingApiService>(new MeteredBillingApiService(new MarketplaceMeteringClient(creds), config, new SaaSClientLogger<MeteredBillingApiService>()))
             .AddSingleton<Executor, Executor>()
+            .AddSingleton<IAppVersionService>(versionInfo)
             .BuildServiceProvider();
 
         services

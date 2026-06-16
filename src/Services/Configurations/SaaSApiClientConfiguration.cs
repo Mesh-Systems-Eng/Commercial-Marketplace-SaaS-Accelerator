@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE file in the project root for license information.
+using System;
+
 namespace Marketplace.SaaS.Accelerator.Services.Configurations;
 
 /// <summary>
@@ -97,20 +99,19 @@ public class SaaSApiClientConfiguration
     public string SaaSAppUrl { get; set; }
 
     /// <summary>
-    /// Gets or sets the saas metered billing support.
-    /// </summary>
-    /// <value>
-    /// True or false.
-    /// </value>
-    public bool SupportMeteredBilling { get; set; }
-
-    /// <summary>
     /// Initializes or Gets the current run environment. Set to "development" or "production" is assumed.
     /// </summary>
     /// <value>
     /// The production-level environment. Typically, "development", "production", or null.
     /// </value>
     public string Environment { get; init; }
+    /// <summary>
+    /// Initializes or Gets the value for IsAdminPortalMultiTenant. Set to true or false is assumed.
+    /// </summary>
+    /// <value>
+    /// The value for IsAdminPortalMultiTenant. Typically, true, false, or null.
+    /// </value>
+    public string IsAdminPortalMultiTenant { get; set; }
 
 
 }
