@@ -197,10 +197,29 @@ if(!($KeyVault -match "^[a-zA-Z][a-z0-9-]+$")) {
 
 # check if dotnet 8 is installed
 
-$dotnetversion = dotnet --version
+$dotnetRoot = Join-Path $HOME '.dotnet'
+$dotnetTools = Join-Path $dotnetRoot 'tools'
+$env:PATH = "$dotnetRoot$([IO.Path]::PathSeparator)$dotnetTools$([IO.Path]::PathSeparator)$env:PATH"
+
+$dotnetversion = dotnet --version 2>$null
+
+if($LASTEXITCODE -ne 0) {
+    Throw "🛑 Dotnet 8 SDK not installed. Install dotnet 8.0.303 and re-run the script."
+    Exit
+}
 
 if(!$dotnetversion.StartsWith('8.')) {
-    Throw "🛑 Dotnet 8 not installed. Install dotnet8 and re-run the script."
+    Throw "🛑 Dotnet 8 SDK not installed. Install dotnet 8.0.303 and re-run the script."
+    Exit
+}
+
+if (!(Get-Command dotnet-ef -ErrorAction SilentlyContinue)) {
+    Throw "🛑 dotnet-ef not found. Run: dotnet tool install --global dotnet-ef --version 8.0.6"
+    Exit
+}
+
+if (!(Get-Command Invoke-Sqlcmd -ErrorAction SilentlyContinue)) {
+    Throw "🛑 Invoke-Sqlcmd not found. Run: Install-Module -Name SqlServer -AllowClobber"
     Exit
 }
 
@@ -211,7 +230,7 @@ Write-Host "Starting SaaS Accelerator Deployment..."
 
 
 #region Check If SQL Server Exist
-$sql_exists = Get-AzureRmSqlServer -ServerName $SQLServerName -ResourceGroupName $ResourceGroupForDeployment -ErrorAction SilentlyContinue
+$sql_exists = Get-AzSqlServer -ServerName $SQLServerName -ResourceGroupName $ResourceGroupForDeployment -ErrorAction SilentlyContinue
 if ($sql_exists) 
 {
 	Write-Host ""
@@ -457,19 +476,31 @@ if (!($ADMTApplicationIDPortal)) {
 
 #region Prepare Code Packages
 Write-host "📜 Prepare publish files for the application"
-if (!(Test-Path '../Publish')) {		
+
+$adminSitePackage = '../Publish/AdminSite.zip'
+$customerSitePackage = '../Publish/CustomerSite.zip'
+
+if (!(Test-Path $adminSitePackage) -or !(Test-Path $customerSitePackage)) {
+	New-Item -ItemType Directory -Path '../Publish' -Force | Out-Null
+
 	Write-host "   🔵 Preparing Admin Site"  
 	dotnet publish ../src/AdminSite/AdminSite.csproj -c release -o ../Publish/AdminSite/ -v q
+	if ($LASTEXITCODE -ne 0) { Throw "🛑 Admin Site publish failed." }
 
 	Write-host "   🔵 Preparing Metered Scheduler"
 	dotnet publish ../src/MeteredTriggerJob/MeteredTriggerJob.csproj -c release -o ../Publish/AdminSite/app_data/jobs/triggered/MeteredTriggerJob/ -v q --runtime win-x64 --self-contained true 
+	if ($LASTEXITCODE -ne 0) { Throw "🛑 Metered Scheduler publish failed." }
 
 	Write-host "   🔵 Preparing Customer Site"
 	dotnet publish ../src/CustomerSite/CustomerSite.csproj -c release -o ../Publish/CustomerSite/ -v q
+	if ($LASTEXITCODE -ne 0) { Throw "🛑 Customer Site publish failed." }
+
+	if (!(Test-Path '../Publish/AdminSite')) { Throw "🛑 Admin Site publish output was not created." }
+	if (!(Test-Path '../Publish/CustomerSite')) { Throw "🛑 Customer Site publish output was not created." }
 
 	Write-host "   🔵 Zipping packages"
-	Compress-Archive -Path ../Publish/AdminSite/* -DestinationPath ../Publish/AdminSite.zip -Force
-	Compress-Archive -Path ../Publish/CustomerSite/* -DestinationPath ../Publish/CustomerSite.zip -Force
+	Compress-Archive -Path ../Publish/AdminSite/* -DestinationPath $adminSitePackage -Force
+	Compress-Archive -Path ../Publish/CustomerSite/* -DestinationPath $customerSitePackage -Force
 }
 #endregion
 
