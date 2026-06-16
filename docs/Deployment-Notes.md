@@ -44,3 +44,12 @@ Install-Module -Name SqlServer -AllowClobber
 - Fulfillment API App Registration: `fab1c0bb-f913-4d5a-a304-e55561f06c6b`
 - Admin Portal SSO App Registration: `4698951b-b2af-4e93-8b72-29b41b63710d`
 - Landing Page SSO App Registration: `6ba6401e-4244-4b5a-ab14-80567b94ef4a`
+
+## Post-Install Checklist
+
+If the installation completed without error, complete the following checklist in Partner Center SaaS Technical Configuration:
+
+- Landing Page section: `https://PdMarketAccel-portal.azurewebsites.net/`
+- Connection Webhook section: `https://PdMarketAccel-portal.azurewebsites.net/api/AzureWebhook`
+- Tenant ID: `d49110b2-6f26-4c66-b723-1729cdb9a3cf`
+- AAD Application ID section: `fab1c0bb-f913-4d5a-a304-e55561f06c6b`

@@ -38,6 +38,7 @@ The command being run passes `WebAppNamePrefix`, deployment resource group, publ
 - Added preflight validation for `Invoke-Sqlcmd` and documented the `SqlServer` PowerShell module dependency.
 - Updated documented `dotnet-ef` version from `8.0.0` to `8.0.6` to match EF Core package references.
 - Fixed `BaselineV2_Seed.cs` to emit ISO 8601 UTC seed dates instead of local-culture `DateTime.Now` strings that SQL Server could not parse.
+- Added the Partner Center post-install checklist to `docs/Deployment-Notes.md`.
 
 ## Notes
 
